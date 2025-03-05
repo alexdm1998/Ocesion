@@ -1,0 +1,11 @@
+#Build
+build/
+
+#Clang LSP settings
+.clang-format
+.clangd
+.cache
+
+
+#Others
+Dependencies.txt

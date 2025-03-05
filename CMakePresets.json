@@ -1,0 +1,27 @@
+{"version" : 10,
+"cmakeMinimumRequired": {
+	"major": 3,
+	"minor": 31,
+	"patch": 5
+},
+"configurePresets": [{
+	"name": "debug",
+	"displayName": "Debug Build",
+	"description": "Debug configuration",
+	"generator": "Ninja",
+	"binaryDir": "${sourceDir}/build/debug",
+	"cacheVariables": {
+		"CMAKE_BUILD_TYPE": "Debug",
+		"CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+	}},{
+	"name": "release",
+	"displayName": "Release Build",
+	"description": "Release configuration",
+	"generator": "Ninja",
+	"binaryDir": "${sourceDir}/build/release",
+	"cacheVariables": {
+		"CMAKE_BUILD_TYPE": "Release",
+		"CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+
+	}}
+]}
