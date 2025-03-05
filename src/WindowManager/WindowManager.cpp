@@ -1,7 +1,7 @@
 #include "WindowManager.h"
 
 WindowManager::WindowManager(int nWindows) {
-  nWindows = nWindows;
+  this->nWindows = nWindows;
   windowArray = new Window*[nWindows];
   for (int i = 0; i < nWindows; i++) {
     windowArray[i] = nullptr;

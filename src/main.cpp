@@ -33,8 +33,6 @@ void ocesion_render() {
     std::cout << "Success: VBO" << std::endl;
   }
 
-  std::cout << *G_VAO << std::endl;
-  std::cout << *G_VBO << std::endl;
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
@@ -51,7 +49,7 @@ int main() {
   WinManager.createWindow(320, 200, "Ocesion Extra", NULL, WinManager.getWindow("Ocesion"));
   WinManager.getWindow("Ocesion Extra")->addFunction(ocesion_render);
 
-  WinManager.getWindow("Heb");
+  //WinManager.getWindow("Heb");
 
   if (!initializeGLAD()) {
     return -1;
