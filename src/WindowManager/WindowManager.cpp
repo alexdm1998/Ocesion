@@ -52,10 +52,9 @@ bool WindowManager::setMainWindow(const char* title) {
 }
 
 Window* WindowManager::getWindow(int index) {
-  if (index >= nWindows)
-    throw std::runtime_error("Invalid Window index");
-  if (windowArray[index] == nullptr)
-    throw std::runtime_error("Null Window index");
+  if (index >= nWindows) {
+    return nullptr;
+  }
   return windowArray[index];
 }
 
@@ -65,7 +64,7 @@ Window* WindowManager::getWindow(const char* title) {
       return windowArray[i];
     }
   }
-  throw std::runtime_error("Name not found");
+  return nullptr;
 }
 
 void WindowManager::run() {
@@ -83,4 +82,13 @@ bool WindowManager::shouldClose() {
   if (windowArray[indexMain] == nullptr)
     return true;
   return windowArray[indexMain]->shouldClose();
+}
+
+
+void WindowManager::forEach(void (*func)()){
+	for(int i = 0; i < nWindows; i++){
+		if(windowArray[i] != nullptr){
+			windowArray[i]->func();
+		}
+	}
 }

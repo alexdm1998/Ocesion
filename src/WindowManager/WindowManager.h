@@ -23,4 +23,5 @@ public:
 
 private:
   bool shouldClose();
+  void forEach(void (*func)()); //For each window
 };
