@@ -1,115 +1,64 @@
-#include <GLAD/gl.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <print>
 
-#include "PrimaryWindow.h"
-#include "Shader.h"
-#include "WindowManager.h"
-
-#include "VAO/VAO.h"
-// Export for nvidia to preferably use the dedicated gpu
-extern "C" {
-__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
-}
-
-// Signatures
-int initializeGLAD();
+//Prototypes
 void errorCallback(int code, const char* description);
 
-unsigned int* G_VAO;
-unsigned int* G_VBO;
 
-// Defintion
-void ocesion_render() {
-  glBindVertexArray(*G_VAO);
-  /*
-    if (glIsVertexArray(*G_VAO) == GL_FALSE) {
-      std::cerr << "Error: VAO is not bound!" << std::endl;
-    } else {
-      std::cout << "Success: VAO is bound!" << std::endl;
-    }
-
-    if (glIsBuffer(*G_VBO) == GL_FALSE) {
-      std::cerr << "Error: VBO" << std::endl;
-    } else {
-      std::cout << "Success: VBO" << std::endl;
-    }
-
-
-
-
-*/
-
-  glDrawArrays(GL_TRIANGLES, 0, 3);
-}
-
+//Entry point
 int main() {
-  VAO example = VAO("3-GL_FLOAT»1-GL_INT»4-GL_DOUBLE");
 
+  // GLFW
   if (!glfwInit()) {
     std::print("GLFW failed to initialize.");
   }
+  // GL context for GLFW window creation
   glfwSetErrorCallback(errorCallback);
-
-  // First Window
-  WindowManager WinManager = WindowManager(2);
-  WinManager.createWindow(640, 480, "Ocesion");
-  WinManager.setMainWindow("Ocesion");
-  WinManager.getWindow("Ocesion")->addFunction(ocesion_render);
-
-  // Second Window
-  WinManager.createWindow(320, 200, "Ocesion Extra", NULL, WinManager.getWindow("Ocesion"));
-  WinManager.getWindow("Ocesion Extra")->addFunction(ocesion_render);
-
-  if (!initializeGLAD()) {
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  // GLFW window creation
+  GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Window", nullptr, nullptr);
+  if (!window) {
+    std::cerr << "Failed to create GLFW window" << std::endl;
+    glfwTerminate();
     return -1;
   }
+  glfwMakeContextCurrent(window);
 
-  PrimaryWindow Meh = PrimaryWindow();
+  // GLEW Initialization
+  GLenum err = glewInit();
+  if (GLEW_OK != err) {
+    fprintf(stderr, "Error %s\n", glewGetErrorString(err));
+  }
+  // Verifying GL Version
+  fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+  fprintf(stdout, "Status: Using OpenGL %s\n", glGetString(GL_VERSION));
+  // Verifying GL Profile
+  GLint value;
+  glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &value);
+  if(value & GL_CONTEXT_CORE_PROFILE_BIT){
+	  std::println("GL PROFILE: CORE");
+  }
+  if(value & GL_CONTEXT_COMPATIBILITY_PROFILE_BIT){
+	std::println("GL PROFILE: COMPATIBILITY");
+  }
 
-  Shader plainShader = Shader("../../src/Shaders/normal.vert", "../../src/Shaders/normal.frag");
 
-  plainShader.use();
-
-  G_VAO = Meh.getVAO();
-  G_VBO = Meh.getVBO();
-  // Execute loop
-  WinManager.run();
+ glGetString(GL_VERSION);
 
 
+  //Application loop
+  while (!glfwWindowShouldClose(window)) {
 
-
-
-
-  
-  
-  std::cout << "Renderer: " << glGetString(GL_RENDERER) << "\n";
-  std::cout << "Vendor: " << glGetString(GL_VENDOR) << "\n";
-
-  
-  
-  
-  GLint inn;
-
-  glGetIntegerv(GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS, &inn);
-  std::print("{}", inn);
+    glfwPollEvents();
+  }
 
   glfwTerminate();
   glfwSetErrorCallback(NULL);
   return 0;
-}
-
-// Initializations
-int initializeGLAD() {
-  int version = gladLoadGL(glfwGetProcAddress);
-  if (version == 0) {
-    std::print("Failed to initialize GLAD!");
-    return 0;
-  }
-
-  std::cout << "OPENGL VERSION: " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
-  return 1;
 }
 
 void errorCallback(int code, const char* description) {

@@ -1,21 +1,21 @@
 cmake_minimum_required(VERSION 3.31.5)
 project(Ocesion_Ad_Infinitum VERSION 0.1)
-#Source files
+
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-file(GLOB_RECURSE SOURCE_FILES ./src/*.cpp ./src/*.c)
 
 
-#Include directories
-include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_SOURCE_DIR}/src/WindowManager)
-#include_directories(${CMAKE_SOURCE_DIR}/src/EngineState)
-#include_directories(${CMAKE_SOURCE_DIR}/src/GameLayer)
-#include_directories(${CMAKE_SOURCE_DIR}/src/Viewport)
-#include_directories(${CMAKE_SOURCE_DIR}/src/Camera)
+add_definitions(-DGLEW_STATIC)
+
 link_directories(${CMAKE_SOURCE_DIR}/lib)
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 
-add_executable(Ocesion_Ad_Infinitum ${SOURCE_FILES})
-
-target_link_libraries(Ocesion_Ad_Infinitum glfw3 gdi32)
+target_link_libraries(${PROJECT_NAME}
+    glew
+    glfw3
+    opengl32
+    gdi32
+)

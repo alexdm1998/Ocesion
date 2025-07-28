@@ -1,14 +1,11 @@
-## Dependencies 
+## Dependencies
 
-The dependencies (include/ lib/) should be built for the specific architecture in use.
+### [GLEW](https://github.com/nigels-com/glew)
 
-### [GLAD](https://github.com/Dav1dde/glad)
-    
-The GLAD generator has to be the second version. The API is different.\
-    [Generator](https://gen.glad.sh/)\
- So far, no extensions are required. Files needed are:\
-    gl.h (In include/GLAD of this project).\
-    gl.c (In src).
+The GLEW repository has a version above (2.2.0) the website (2.1.0) as of writing this, and that is the one in use for this project.
+    Web: https://glew.sourceforge.net/
+    Steps: Download source -> Build static library -> Place header in include/ and glew.lib in lib/
+
 
 
 ### [GLFW](https://www.glfw.org/)
