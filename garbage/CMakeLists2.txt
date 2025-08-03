@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.15)
+project(Ocesion_Ad_Infinitum)
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
+add_definitions(-DGLEW_STATIC)
+
+
+add_library(glew STATIC src/glew.c)
+target_include_directories(glew PUBLIC include)
+
+# --------------------------------------------------
+# GLFW Setup (Using headers only)
+# --------------------------------------------------
+# Since you're not building GLFW from source, just link it
+find_library(GLFW_LIB NAMES glfw3 glfw PATHS lib/)  # If you have a libglfw3.a/.lib
+if(NOT GLFW_LIB)
+    message(WARNING "GLFW library not found in lib/ - linking may fail!")
+endif()
+
+# --------------------------------------------------
+# Your Project
+# --------------------------------------------------
+add_executable(${PROJECT_NAME}
+    src/main.cpp    # Other source files...
+)
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    include           # For GLFW/glfw3.h and GL/glew.h
+    src/WindowManager # Your other includes
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    glew             # Your built GLEW
+    ${GLFW_LIB}      # Prebuilt GLFW (if found)
+    opengl32         # Windows OpenGL
+    gdi32            # Windows GDI
+)

@@ -1,79 +1,47 @@
 #include <GLAD/gl.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <print>
 
-#include "PrimaryWindow.h"
-#include "WindowManager.h"
-
-// Export for nvidia to preferably use the dedicated gpu
-extern "C" {
-__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
-}
-
-// Signature
-int initializeGLAD();
-
-unsigned int* G_VAO;
-unsigned int* G_VBO;
-
-// Defintion
-void ocesion_render() {
-  glBindVertexArray(*G_VAO);
-
-  if (glIsVertexArray(*G_VAO) == GL_FALSE) {
-    std::cerr << "Error: VAO is not bound!" << std::endl;
-  } else {
-    std::cout << "Success: VAO is bound!" << std::endl;
-  }
-
-  if (glIsBuffer(*G_VBO) == GL_FALSE) {
-    std::cerr << "Error: VBO" << std::endl;
-  } else {
-    std::cout << "Success: VBO" << std::endl;
-  }
-
-  glDrawArrays(GL_TRIANGLES, 0, 3);
-}
-
 int main() {
-  if (!glfwInit())
-    std::print("GLFW failed to initialize.");
+  int glfw_init_flag = glfwInit();
 
-  // Assumptions: GLFW already has been initialized
-  WindowManager WinManager = WindowManager(2);
-  WinManager.createWindow(640, 480, "Ocesion");
-  WinManager.setMainWindow("Ocesion");
-  WinManager.getWindow("Ocesion")->addFunction(ocesion_render);
-
-  WinManager.createWindow(320, 200, "Ocesion Extra", NULL, WinManager.getWindow("Ocesion"));
-  WinManager.getWindow("Ocesion Extra")->addFunction(ocesion_render);
-
-  //WinManager.getWindow("Heb");
-
-  if (!initializeGLAD()) {
+  if (glfw_init_flag == GLFW_FALSE) {
+    std::println("GLFW didn't initialize successfully");
     return -1;
   }
 
-  PrimaryWindow Meh = PrimaryWindow();
+  // OpenGL Specifications
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
-  G_VAO = Meh.getVAO();
-  G_VBO = Meh.getVBO();
-  // Execute loop
-  WinManager.run();
+  GLFWwindow* mainWindow = glfwCreateWindow(600, 400, "Ocesion ad Infinitum", NULL, NULL);
+  if (!mainWindow) {
+    std::print("Failed to create window (GLFW)");
+    glfwTerminate();
+    return -1;
+  }
+  glfwMakeContextCurrent(mainWindow);
+
+  int glad_version = gladLoadGL(glfwGetProcAddress);
+  if (glad_version == 0) {
+    std::println("GLAD didn't initialize successfully");
+    return -1;
+  } else {
+    std::println("GLAD initialized successfully");
+  }
+
+  glClearColor(0.2, 0.1,  0.4,1.0);
+
+  while (!glfwWindowShouldClose(mainWindow)) {
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glfwSwapBuffers(mainWindow);
+
+    glfwPollEvents();
+  }
 
   glfwTerminate();
   return 0;
-}
-
-// Initializations
-int initializeGLAD() {
-  int version = gladLoadGL(glfwGetProcAddress);
-  if (version == 0) {
-    std::print("Failed to initialize GLAD!");
-    return 0;
-  }
-
-  std::cout << "OPENGL VERSION: " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
-  return 1;
 }

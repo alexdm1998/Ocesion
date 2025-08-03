@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.15)
+project(Ocesion_Ad_Infinitum)
+
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+add_definitions(-DGLEW_STATIC)
+add_library(glew STATIC src/glew.c)
+target_include_directories(glew PUBLIC include)
+
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
+link_directories(${CMAKE_SOURCE_DIR}/lib)
+
+
+
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+target_link_libraries(Ocesion_Ad_Infinitum glew glfw3 gdi32)
